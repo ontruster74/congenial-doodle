@@ -89,4 +89,76 @@ describe Carnival do
       expect(@carnival.total_revenue).to eq(15)
     end
   end
+
+  describe '#all_visitors' do
+    it 'can list all visitors at the carnival' do
+      @carnival.add_ride(@ride1)
+      @carnival.add_ride(@ride2)
+      @carnival.add_ride(@ride3)
+
+      expect(@carnival.all_visitors).to eq([@visitor1, @visitor2, @visitor3])
+    end
+  end
+
+  describe '#summary' do
+    it 'can provide a summary hash' do
+      @carnival.add_ride(@ride1)
+      @carnival.add_ride(@ride2)
+      @carnival.add_ride(@ride3)
+
+      expect(@carnival.summary[:visitor_count]).to eq(3)
+      expect(@carnival.summary[:revenue_earned]).to eq(15)
+
+      expect(@carnival.summary[:visitors].count).to eq(3)
+      expect(@carnival.summary[:visitors][0][:visitor]).to eq(@visitor1)
+      expect(@carnival.summary[:visitors][0][:favorite_ride]).to eq(@ride1)
+      expect(@carnival.summary[:visitors][0][:total_money_spent]).to eq(7)
+
+      expect(@carnival.summary[:rides].count).to eq(3)
+      expect(@carnival.summary[:rides][0][:ride]).to eq(@ride1)
+      expect(@carnival.summary[:rides][0][:riders]).to eq([@visitor1, @visitor2])
+      expect(@carnival.summary[:rides][0][:total_revenue]).to eq(3)
+      
+    end
+  end
+
+  describe '::total_revenue' do
+    xit 'can track total_revenue across all carnivals' do
+      @carnival2 = Carnival.new(14)
+
+      @ride4 = Ride.new({ name: 'Carousel', min_height: 24, admission_fee: 1, excitement: :gentle })
+      @ride5 = Ride.new({ name: 'Ferris Wheel', min_height: 36, admission_fee: 5, excitement: :gentle })
+      
+
+      @visitor4 = Visitor.new('Bruce', 54, '$10')
+      @visitor4.add_preference(:gentle)
+
+      @visitor5 = Visitor.new('Tucker', 36, '$5')
+      @visitor5.add_preference(:gentle)
+
+      @visitor6 = Visitor.new('Penny', 64, '$15')
+      @visitor6.add_preference(:gentle)
+      @visitor6.add_preference(:thrilling)
+
+      @ride4.board_rider(@visitor1)
+      @ride4.board_rider(@visitor2)
+      @ride4.board_rider(@visitor1)
+
+      @ride5.board_rider(@visitor1)
+      @ride5.board_rider(@visitor3)
+
+      @ride6.board_rider(@visitor3)
+
+      @carnival2.add_ride(@ride4)
+      @carnival2.add_ride(@ride5)
+      @carnival2.add_ride(@ride6)
+
+      @carnival.add_ride(@ride1)
+      @carnival.add_ride(@ride2)
+      @carnival.add_ride(@ride3)
+
+      expect(Carnival.all.count).to eq(2)
+      expect(Carnival.total_revenue).to eq(25)
+    end
+  end
 end
