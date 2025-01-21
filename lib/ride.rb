@@ -17,6 +17,7 @@ class Ride
     rider.spending_money -= @admission_fee
   end
 
+  
   def total_rides
     @rider_log.sum {|_, rides| rides}
   end
