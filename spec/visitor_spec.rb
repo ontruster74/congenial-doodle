@@ -10,10 +10,14 @@ describe Visitor do
 
   describe '#initialize' do
     it 'exists' do
-      expect(@visitor1.name).to eq("Bruce")
+      expect(@visitor1).to be_a(Visitor)
     end
 
     it 'has a name' do
+      expect(@visitor1.name).to eq("Bruce")
+    end
+
+    it 'has a height' do
       expect(@visitor1.height).to eq(54)
     end
 
